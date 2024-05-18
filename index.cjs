@@ -12,7 +12,7 @@ fs.writeFileSync(
   fs
     .readFileSync("addresses.txt", { encoding })
     .split(newLine)
-    .map((a) => (sybils.includes(a.toLowerCase()) ? `${a},sybil` : `${a}`))
+    .map((a) => (sybils.includes(a.toLowerCase()) ? `${a},sybil` : `${a},`))
     .join("\n"),
   { encoding }
 );
