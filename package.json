@@ -1,0 +1,12 @@
+{
+  "name": "check-layerzero-sybil",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.cjs",
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.cjs"
+  },
+  "author": "",
+  "license": "ISC"
+}
