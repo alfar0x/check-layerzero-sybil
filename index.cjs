@@ -1,20 +1,23 @@
 const fs = require("fs");
 
+const FILE_SYBILS = "trusta-addresses.txt";
+
 const newLine = /\r?\n/;
 const encoding = "utf-8";
 
 const sybils = fs
-  .readFileSync("sybil-addresses.txt", { encoding })
-  .split(newLine);
+  .readFileSync(FILE_SYBILS, { encoding })
+  .split(newLine)
+  .map((l) => l.toLocaleLowerCase());
 
 const data = fs
-  .readFileSync("addresses.txt", { encoding })
+  .readFileSync("my-addresses.txt", { encoding })
   .split(newLine)
   .map((a) => (sybils.includes(a.toLowerCase()) ? `${a},sybil` : `${a},`));
 
-fs.writeFileSync("all.txt", data.join("\n"), { encoding });
+fs.writeFileSync("result-all.txt", data.join("\n"), { encoding });
 fs.writeFileSync(
-  "sybils.txt",
+  "result-sybils.txt",
   data.filter((l) => l.endsWith("sybil")).join("\n"),
   { encoding }
 );
