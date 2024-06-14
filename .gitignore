@@ -1,6 +1,5 @@
-my-addresses.txt
-result-all.txt
-result-sybils.txt
+addresses.txt
+result.txt
 node_modules/
 yarn.lock
 package-lock.json
