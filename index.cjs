@@ -8,7 +8,7 @@ const sybils = fs
   .split(newLine)
   .map((line) => line.split(","))
   .filter((line) => line.length === 3)
-  .map((line) => [line[0], line[1], line[2].toLocaleLowerCase()]);
+  .map((line) => [line[0], line[1], line[2].trim().toLocaleLowerCase()]);
 
 let count = 0;
 
@@ -16,7 +16,7 @@ const data = fs
   .readFileSync("addresses.txt", { encoding })
   .split(newLine)
   .map((address) => {
-    const lower = address.toLocaleLowerCase();
+    const lower = address.trim().toLocaleLowerCase();
     const sybil = sybils.find((s) => s[2] === lower);
     if (!sybil) return address;
     count += 1;
