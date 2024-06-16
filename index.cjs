@@ -1,29 +1,34 @@
 const fs = require("fs");
 
-const newLine = /\r?\n/;
 const encoding = "utf-8";
 
-const sybils = fs
-  .readFileSync("provisionalSybilList.csv", { encoding })
-  .split(newLine)
-  .map((line) => line.split(","))
-  .filter((line) => line.length === 3)
-  .map((line) => [line[0], line[1], line[2].trim().toLocaleLowerCase()]);
+const readFile = (name) => fs.readFileSync(name, { encoding }).split(/\r?\n/);
+const normalizeAddress = (a) => a.trim().toLocaleLowerCase();
 
-let count = 0;
+const addresses = readFile("addresses.txt").map(normalizeAddress);
+const sybils = readFile("provisionalSybilList.csv");
 
-const data = fs
-  .readFileSync("addresses.txt", { encoding })
-  .split(newLine)
-  .map((address) => {
-    const lower = address.trim().toLocaleLowerCase();
-    const reports = sybils.filter((s) => s[2] === lower);
-    if (!reports.length) return address;
-    count += 1;
-    const result = reports.map((r) => [r[1], r[0]].join(",")).join(" | ");
-    return [address, result].join(" - ");
-  });
+const found = {};
 
-fs.writeFileSync("result.txt", data.join("\n"), { encoding });
+for (const sybil of sybils) {
+  const splitted = sybil.split(",");
+  if (splitted.length !== 3) continue;
+  const lowerAddress = normalizeAddress(splitted[2]);
+  if (!addresses.includes(lowerAddress)) continue;
+  if (!found[lowerAddress]) found[lowerAddress] = [];
+  found[lowerAddress].push([splitted[0], splitted[1]].join(" , "));
+}
 
-console.log(`sybils: ${count}`);
+const result = addresses
+  .map((a) => (found[a] ? [a, found[a].join(" | ")].join(" - ") : a))
+  .join("\n");
+
+fs.writeFileSync("result.txt", result, { encoding });
+
+const sybilsResult = Object.keys(found)
+  .map((a) => `${a}\n${found[a].join("\n")}`)
+  .join("\n\n----\n\n");
+
+fs.writeFileSync("sybils.txt", sybilsResult);
+
+console.log(`sybils: ${Object.keys(found).length}`);
