@@ -17,11 +17,11 @@ const data = fs
   .split(newLine)
   .map((address) => {
     const lower = address.trim().toLocaleLowerCase();
-    const sybil = sybils.find((s) => s[2] === lower);
-    if (!sybil) return address;
+    const reports = sybils.filter((s) => s[2] === lower);
+    if (!reports.length) return address;
     count += 1;
-    const [source, cluster] = sybil;
-    return [address, cluster, source].join(",");
+    const result = reports.map((r) => [r[1], r[0]].join(",")).join(" | ");
+    return [address, result].join(" - ");
   });
 
 fs.writeFileSync("result.txt", data.join("\n"), { encoding });
