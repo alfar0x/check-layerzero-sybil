@@ -6,7 +6,9 @@ const encoding = "utf-8";
 const sybils = fs
   .readFileSync("provisionalSybilList.csv", { encoding })
   .split(newLine)
-  .map((line) => line.split(","));
+  .map((line) => line.split(","))
+  .filter((line) => line.length === 3)
+  .map((line) => [line[0], line[1], line[2].toLocaleLowerCase()]);
 
 let count = 0;
 
