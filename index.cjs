@@ -19,7 +19,7 @@ const data = fs
     if (!sybil) return address;
     count += 1;
     const [source, cluster] = sybil;
-    return [address, source, cluster].join(",");
+    return [address, cluster, source].join(",");
   });
 
 fs.writeFileSync("result.txt", data.join("\n"), { encoding });
